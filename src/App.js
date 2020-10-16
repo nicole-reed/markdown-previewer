@@ -1,24 +1,33 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useState, useEffect } from 'react';
+import marked from 'marked';
+import { defaultMarkdown } from './defaultMarkdown'
 import './App.css';
 
-function App() {
+
+
+const App = () => {
+
+  const [markdown, setMarkdown] = useState(defaultMarkdown)
+  const [preview, setPreview] = useState('')
+
+  const updateMarkdown = e => {
+    setMarkdown(e.target.value)
+
+  }
+
+  useEffect(() => {
+    const convertedMarkdown = marked(markdown)
+    setPreview(convertedMarkdown)
+  }, [markdown])
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>Write your markdown here:</h1>
+      <textarea id="editor" value={markdown} onChange={updateMarkdown}></textarea>
+      <h2>Converted Markdown:</h2>
+      <div id="previewDiv">
+        <div id="preview" dangerouslySetInnerHTML={{ __html: preview }}></div>
+      </div>
     </div>
   );
 }
